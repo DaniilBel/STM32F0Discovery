@@ -105,11 +105,6 @@ int main(void)
   //RCC->AHBENR |= RCC_AHBENR_GPIOCEN;
   //GPIOC->ODR ^= LD4_Pin;
 
-  HAL_TIM_Base_Start(&htim6);
-  HAL_TIM_Base_Start_IT(&htim6);
-
-
-
   /* USER CODE END 2 */
  
  
@@ -119,11 +114,7 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	  if(HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
-		  HAL_TIM_Base_Stop(&htim6);
-		    HAL_TIM_Base_Stop_IT(&htim6);
-	  	  HAL_GPIO_WritePin(LD4_GPIO_Port, LD4_Pin, GPIO_PIN_RESET);
-	    }
+
     /* USER CODE BEGIN 3 */
 
   }
@@ -186,7 +177,7 @@ static void MX_TIM6_Init(void)
   htim6.Instance = TIM6;
   htim6.Init.Prescaler = 20999;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 100;
+  htim6.Init.Period = 10;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {

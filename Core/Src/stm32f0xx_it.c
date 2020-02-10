@@ -42,7 +42,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+uint8_t ledLight = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -148,11 +148,11 @@ void EXTI0_1_IRQHandler(void)
 
   /* USER CODE END EXTI0_1_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
-
   /* USER CODE BEGIN EXTI0_1_IRQn 1 */
-  if(HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
-	  HAL_GPIO_WritePin(LD4_GPIO_Port, LD4_Pin, GPIO_PIN_SET);
-  }
+  HAL_TIM_Base_Start(&htim6);
+  HAL_TIM_Base_Start_IT(&htim6);
+
+  TIM6_DAC_IRQHandler();
   /* USER CODE END EXTI0_1_IRQn 1 */
 }
 
@@ -166,7 +166,18 @@ void TIM6_DAC_IRQHandler(void)
   /* USER CODE END TIM6_DAC_IRQn 0 */
   HAL_TIM_IRQHandler(&htim6);
   /* USER CODE BEGIN TIM6_DAC_IRQn 1 */
-  //HAL_GPIO_TogglePin(LD4_GPIO_Port, LD4_Pin);
+  if(HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin)){
+  	  if (ledLight == 0) {
+  		  	HAL_GPIO_WritePin(LD4_GPIO_Port, LD4_Pin, GPIO_PIN_SET);
+  		  	ledLight = 1;
+  	  	} else {
+  	  		HAL_GPIO_WritePin(LD4_GPIO_Port, LD4_Pin, GPIO_PIN_RESET);
+  	  		ledLight = 0;
+  		}
+  	HAL_TIM_Base_Stop(&htim6);
+  	HAL_TIM_Base_Stop_IT(&htim6);
+
+    }
   /* USER CODE END TIM6_DAC_IRQn 1 */
 }
 
